@@ -6,10 +6,11 @@ import numpy as np
 ## calculate repayment
 
 P = 200000
-Po = P
+P0 = P
 r = 4.2/100
 yr = 30 #years
 t = 24 #ftn=24, mth=12 #if want 30years for ftn, use 26
+t0 = t
 
 def Compinterest(Pzero, rate, repayments):
 	a = (Pzero * rate * ((1+rate) ** repayments))
@@ -23,8 +24,8 @@ Compinterest(P, (r/t), yr*t) #repayments year*12wk or 24ftn
 
 ## calculate term, total paid and interest paid
 
-if t == 26:
-	t = 26
+if t == 24:
+    t = 26
 interest_charged = 0
 int_paid = []
 count = 0
@@ -52,10 +53,10 @@ while P > 0:
             interest_charged = 1
     count = count + 1
 
-print "Initial loan: $", Po, "@ ", r*100, "%"
-print Compinterest(Po, (r/t), yr*t) #repayments year*12wk or 24ftn
+print "Initial loan: $", P0, "@ ", r*100, "%"
+print Compinterest(P0, (r/t), yr*t0) #repayments year*12wk or 24ftn
 print "years to pay off:", '{:0.2f}' .format(count / float(t))
-print "interest charged $", '{:0.2f}'.format((count*payment-Po))
+print "interest charged $", '{:0.2f}'.format((count*payment-P0))
 
 ##print interest paid by year
 np.set_printoptions(formatter={'float': lambda x: "{0:0.2f}".format(x)})
