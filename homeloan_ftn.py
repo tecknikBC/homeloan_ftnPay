@@ -1,7 +1,7 @@
 import numpy as np
 
 #### calculates repayment req, years to pay off, and interest charged
-#### for a home loan paid off fortnightly.
+#### for a home loan paid off fortnightly or monthly.
 
 ## calculate repayment
 
@@ -9,7 +9,7 @@ P = 200000
 Po = P
 r = 4.2/100
 yr = 30 #years
-t = 24 #ftn
+t = 24 #ftn=24, mth=12 #if want 30years for ftn, use 26
 
 def Compinterest(Pzero, rate, repayments):
 	a = (Pzero * rate * ((1+rate) ** repayments))
@@ -23,6 +23,8 @@ Compinterest(P, (r/t), yr*t) #repayments year*12wk or 24ftn
 
 ## calculate term, total paid and interest paid
 
+if t == 26:
+	t = 26
 interest_charged = 0
 int_paid = []
 count = 0
@@ -32,19 +34,27 @@ ftn_month_adj = list(range(3,(26*(yr+1)),13))
 
 ## perform payments
 while P > 0:
-	P = (P - payment)
-	if interest_charged > 0.5:
-		if count not in ftn_month_adj: #brute force in two extra payments / year
-			P = (P + (P*(r/12)))
-			int_paid = np.append(int_paid, P*(r/12))
-		interest_charged = 0
-	else:
-		interest_charged = 1
-	count = count + 1
+    if t is 12:
+        P = (P + (P*(r/12)) - payment)
+        int_paid = np.append(int_paid, P*(r/12))
+    else:
+        P = (P - payment)
+        if interest_charged > 0.5:
+            if t is 12:
+                P = (P + (P*(r/12)))
+                int_paid = np.append(int_paid, P*(r/12))
+            else:
+                if count not in ftn_month_adj: #brute force in two extra payments / year
+                    P = (P + (P*(r/12)))
+                    int_paid = np.append(int_paid, P*(r/12))
+            interest_charged = 0
+        else:
+            interest_charged = 1
+    count = count + 1
 
 print "Initial loan: $", Po, "@ ", r*100, "%"
 print Compinterest(Po, (r/t), yr*t) #repayments year*12wk or 24ftn
-print "years to pay off:", '{:0.2f}' .format(count / float(26))
+print "years to pay off:", '{:0.2f}' .format(count / float(t))
 print "interest charged $", '{:0.2f}'.format((count*payment-Po))
 
 ##print interest paid by year
@@ -57,6 +67,3 @@ for x in range(5):
 	yr = yr + 1
 	a = a + 12
 	b = b + 12
-
-#cba says 25.9
-#we calc 25.6; not too bad.
